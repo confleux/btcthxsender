@@ -1,4 +1,5 @@
 import config from "config";
+import * as crypto from "crypto";
 import pack from "./utils/pack";
 import { createHash } from "crypto";
 import net from "net";
@@ -9,7 +10,7 @@ const makeMsg = (cmd: string, payload: Buffer): Buffer => {
   const cmds: string = (cmd + "\0".repeat(12 - cmd.length));
   const command = pack("<12s", cmds);
 
-  const length = pack("I", payload.length);
+  const length = pack("<I", payload.length);
 
   const hash1 = createHash('sha256').update(payload.toString("hex")).digest("hex");
   const hash2 = createHash('sha256').update(hash1).digest();
@@ -19,13 +20,13 @@ const makeMsg = (cmd: string, payload: Buffer): Buffer => {
 }
 
 const versionMessage = (): Buffer => {
-  const version = pack("i", 60002);
-  const services = pack("Q", 0);
-  const timestamp = pack("q", Math.floor(Date.now() / 10) / 100);
+  const version = pack("<i", 60002);
+  const services = pack("<Q", 0);
+  const timestamp = pack("<q", Math.floor(Date.now() / 10) / 100);
 
   const addr_recv = Buffer.concat([
     pack("Q", 0),
-    pack(">16s", "127.0.0.1"),
+    pack(">16s", config.get("ip")),
     pack(">H", 8333)
   ]);
 
@@ -35,7 +36,7 @@ const versionMessage = (): Buffer => {
     pack(">H", 8333)
   ]);
 
-  const nonce = pack("Q", Math.random() * 122222222222222222222);
+  const nonce = crypto.randomBytes(8);
   const user_agent = pack("B", 0);
   const height = pack("i", 0);
 
@@ -64,5 +65,4 @@ client.on('data', (data) => {
 
 client.on('close', () => {
   console.log("Connection closed");
-})
-
+});
