@@ -12,7 +12,7 @@ const makeMsg = (cmd: string, payload: Buffer): Buffer => {
 
   const length = pack("<I", payload.length);
 
-  const hash1 = createHash('sha256').update(payload.toString("hex")).digest("hex");
+  const hash1 = createHash('sha256').update(payload).digest();
   const hash2 = createHash('sha256').update(hash1).digest();
   const check = hash2.subarray(0, 4);
 
@@ -26,7 +26,7 @@ const versionMessage = (): Buffer => {
 
   const addr_recv = Buffer.concat([
     pack("Q", 0),
-    pack(">16s", config.get("ip")),
+    pack(">16s", "127.0.0.1"),
     pack(">H", 8333)
   ]);
 
@@ -54,6 +54,7 @@ const version  = versionMessage();
 const message = makeMsg("version", version);
 
 const client = new net.Socket();
+
 client.connect(port, ip, () => {
   console.log(`Connected to: ${ip}:${port}`);
   client.write(message);
