@@ -1,4 +1,4 @@
-import pack from "./utils/pack";
+import pack from "../utils/pack";
 
 const makeGetdataPayload = (id: string, dataType: number) => {
   const count = pack("<b", 1);

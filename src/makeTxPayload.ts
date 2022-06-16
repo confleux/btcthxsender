@@ -1,5 +1,5 @@
-import pack from "./utils/pack";
-import {createHash, privateEncrypt} from "crypto";
+import pack from "../utils/pack";
+import { createHash } from "crypto";
 import elliptic from "elliptic";
 
 //  @ts-ignore

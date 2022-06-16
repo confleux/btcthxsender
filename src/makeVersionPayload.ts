@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import pack from "./utils/pack";
+import pack from "../utils/pack";
 
 const makeVersionPayload = (): Buffer => {
   const version = pack("<i", 60002);
