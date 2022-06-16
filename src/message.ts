@@ -1,5 +1,5 @@
 import config from "config";
-import pack from "./utils/pack";
+import pack from "../utils/pack";
 import { createHash } from "crypto";
 
 export default class Message {
