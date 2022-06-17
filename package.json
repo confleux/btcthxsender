@@ -17,7 +17,7 @@
     "commander": "^9.3.0",
     "elliptic": "^6.5.4",
     "jspack": "^0.0.4",
-    "long": "^5.2.0",
+    "long": "^5.2.0"
   },
   "devDependencies": {
     "@types/config": "^0.0.41",

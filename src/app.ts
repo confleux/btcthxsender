@@ -50,6 +50,8 @@ const private_key: string = config.get("tx.private_key");
      const txPayload = makeTxPayload(previous_output, receiver_address, my_address, private_key);
      const txMessage = new Message("tx", txPayload);
 
+     console.log(txMessage.getData().toString("hex"));
+
      client.write(txMessage.getData());
    }
  });
