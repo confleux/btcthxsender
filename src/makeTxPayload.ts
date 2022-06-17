@@ -32,8 +32,8 @@ const makeTxPayload = (previous_output: string, receiver_address: string, my_add
   const tx_in_count = pack("<B", 1);
   const script = Buffer.from(`76a914${my_hashed_pubkey}88ac`, "hex");
   const tx_in: Tx_in = {
-    outpoint_hash: Buffer.from(previous_output, "hex"),
-    outpoint_index: pack("<L", 1),
+    outpoint_hash: Buffer.from(previous_output, "hex").reverse(),
+    outpoint_index: pack("<L", 0),
     script: script,
     script_bytes: pack("<B", script.length),
     sequence: Buffer.from("ffffffff", "hex")
@@ -55,11 +55,11 @@ const makeTxPayload = (previous_output: string, receiver_address: string, my_add
   const hash1 = createHash('sha256').update(tx_to_sign).digest();
   const hashed_raw_tx  = createHash('sha256').update(hash1).digest();
 
-  const keyPair = ec.keyFromPrivate(private_key);
+  const keyPair = ec.keyFromPrivate(private_key, "hex");
   const sk = keyPair.getPrivate();
   const vk = keyPair.getPublic();
   const public_key = vk.encode("hex", false);
-  const sign = Buffer.from(ec.sign(hashed_raw_tx, keyPair, "hex", { canonical: true }).toDER());
+  const sign = Buffer.from(keyPair.sign(hashed_raw_tx, "hex").toDER());
 
   const sigscript = Buffer.concat([
     sign,
